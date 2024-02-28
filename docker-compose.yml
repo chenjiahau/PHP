@@ -1,18 +1,22 @@
 version: "3"
 
 services:
-  webserver:
-    container_name: PHP-webserver
-    build:
-      context: .
-      dockerfile: Dockerfile
+  php:
+    build: "./php/"
     volumes:
-      - ./www:/var/www/html
-    ports:
-      - 8080:80
+      - ./www/:/var/www/html/
     depends_on:
-      - mysql-db
-  mysql-db:
+      - mysql
+  apache:
+    build: "./apache/"
+    depends_on:
+      - php
+      - mysql
+    ports:
+      - "8080:80"
+    volumes:
+      - ./www/:/var/www/html/
+  mysql:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: password
@@ -29,9 +33,9 @@ services:
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     links:
-      - mysql-db
+      - mysql
     ports:
       - "8081:80"
     environment:
-      PMA_HOST: mysql-db
+      PMA_HOST: mysql
       MYSQL_ROOT_PASSWORD: password
