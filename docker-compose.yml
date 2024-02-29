@@ -29,7 +29,7 @@ services:
     image: composer:latest
     command: ["composer", "install"]
     volumes:
-      - /var/www/docker-study.loc/recipe-05/php:/app
+      - ./www:/app
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     links:
